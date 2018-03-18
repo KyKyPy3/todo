@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+
+import { TodoService } from './../todo.service';
 
 @Component({
   selector: 'app-todo-header',
   templateUrl: './todo-header.component.html',
-  styleUrls: ['./todo-header.component.css']
+  styleUrls: ['./todo-header.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TodoHeaderComponent implements OnInit {
+export class TodoHeaderComponent {
 
-  constructor() { }
+  @ViewChild('newTodo') public newTodoEl: ElementRef;
 
-  ngOnInit() {
+  constructor(
+    private _todoService: TodoService
+  ) { }
+
+  public addTodo(title: string): void {
+    this._todoService.add(title);
+    this.newTodoEl.nativeElement.value = '';
   }
 
 }

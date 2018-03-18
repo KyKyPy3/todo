@@ -10,6 +10,7 @@ import { TodoFooterComponent } from './todo-footer/todo-footer.component';
 import { TodoHeaderComponent } from './todo-header/todo-header.component';
 import { TrimPipe } from './trim.pipe';
 import { TodoService } from './todo.service';
+import { routes } from './routes';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { TodoService } from './todo.service';
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot([])
+    RouterModule.forRoot(routes)
   ],
   providers: [
     TodoService

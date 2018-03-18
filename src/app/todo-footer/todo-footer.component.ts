@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { map } from 'rxjs/operators/map';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Observable } from 'rxjs/Observable';
 
 import { TodoModel } from './../todo.model';
 import { TodoService } from './../todo.service';
@@ -15,33 +20,34 @@ export class TodoFooterComponent implements OnInit {
   public currentStatus: any;
 
   constructor(
-    private _todoService: TodoService
+    private _todoService: TodoService,
+    private _route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this._todoService.todos.subscribe((todos: TodoModel[]) => {
+    combineLatest(
+      this._route.params.pipe(map(params => params.status)),
+      this._todoService.todos
+    ).subscribe(([status, todos]) => {
+      this.currentStatus = status || '';
       this.todos = todos;
     });
   }
 
   public getRemainingCount(): number {
-    const remainingTodos = this.todos.filter((todo: TodoModel) => {
+    return this.todos.filter((todo: TodoModel) => {
       return todo.completed === false;
-    });
-
-    return remainingTodos.length;
+    }).length;
   }
 
   public hasCompleted(): boolean {
-    const remainingTodos = this.todos.filter((todo: TodoModel) => {
-      return todo.completed === false;
-    });
-
-    return remainingTodos.length === 0;
+    return this.todos.filter((todo: TodoModel) => {
+      return todo.completed === true;
+    }).length !== 0;
   }
 
   public removeCompleted(): void {
-
+    this._todoService.removeCompleted();
   }
 
 }

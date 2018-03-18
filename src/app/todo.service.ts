@@ -25,30 +25,6 @@ export class TodoService {
     this._todos.next(_todos);
   }
 
-  get completed(): Observable<TodoModel[]> {
-    return this._todos.pipe(
-      map((todos: TodoModel[]) => {
-        const remainingTodos = todos.filter((todo: TodoModel) => {
-          return todo.completed === true;
-        });
-
-        return remainingTodos;
-      })
-    );
-  }
-
-  get remaining(): Observable<TodoModel[]> {
-    return this._todos.pipe(
-      map((todos: TodoModel[]) => {
-        const remainingTodos = todos.filter((todo: TodoModel) => {
-          return todo.completed === false;
-        });
-
-        return remainingTodos;
-      })
-    );
-  }
-
   public removeCompleted(): void {
     const todos = this._todos.getValue();
     const remainingTodos = todos.filter((todo: TodoModel) => {
@@ -78,6 +54,20 @@ export class TodoService {
       return t.id !== id;
     });
     this._todos.next(newTodo);
+    this._persist();
+  }
+
+  public update(newTodo: TodoModel): void {
+    let newTodos = this._todos.getValue();
+    newTodos = newTodos.map((todo: TodoModel) => {
+      if (newTodo.id === todo.id) {
+        return newTodo;
+      }
+
+      return todo;
+    });
+
+    this._todos.next(newTodos);
     this._persist();
   }
 

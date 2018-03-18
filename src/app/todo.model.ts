@@ -18,9 +18,9 @@ export class TodoModel {
     this.title = title.trim();
   }
 
-  constructor(title) {
+  constructor(title: string) {
     this.id = TodoModel.newGuid();
     this.completed = false;
-    this.title = title.trim();
+    this.setTitle(title);
   }
 }
