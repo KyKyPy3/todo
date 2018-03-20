@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { trigger, transition, style, animate, AnimationEvent } from '@angular/animations';
+import { trigger, transition, style, animate, AnimationEvent, state } from '@angular/animations';
 
 import { TodoModel } from '../todo.model';
 
@@ -9,6 +9,28 @@ import { TodoModel } from '../todo.model';
   styleUrls: ['./todo-item.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
+    trigger('stateAnimation', [
+      state('incomplete', style({
+        'color': 'black',
+        'text-decoration': 'none'
+      })),
+      state('complete', style({
+        'color': '#d9d9d9',
+        'text-decoration': 'line-through'
+      })),
+      transition('incomplete => complete', [
+        style({
+          'text-decoration': 'line-through'
+        }),
+        animate('0.2s', style({ 'color': '#d9d9d9'}))
+      ]),
+      transition('complete => incomplete', [
+        style({
+          'text-decoration': 'none'
+        }),
+        animate('0.2s', style({ 'color': 'black'}))
+      ])
+    ]),
     trigger('todoAnimation', [
       transition('void => *', [
         style({ height: 0 }),
@@ -31,6 +53,10 @@ export class TodoItemComponent {
   public editing = false;
 
   @HostBinding('@todoAnimation') true;
+
+  @HostBinding('@stateAnimation') get state() {
+    return this.todo.completed ? 'complete' : 'incomplete';
+  }
 
   public edit() {
     this.editing = true;
