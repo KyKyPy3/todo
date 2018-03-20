@@ -22,21 +22,21 @@ import { TodoModel } from '../todo.model';
         style({
           'text-decoration': 'line-through'
         }),
-        animate('0.2s', style({ 'color': '#d9d9d9'}))
+        animate('0.2s')
       ]),
       transition('complete => incomplete', [
         style({
           'text-decoration': 'none'
         }),
-        animate('0.2s', style({ 'color': 'black'}))
+        animate('0.2s')
       ])
     ]),
     trigger('todoAnimation', [
-      transition('void => *', [
+      transition(':enter', [
         style({ height: 0 }),
         animate('0.3s ease-in', style({ height: '*' }))
       ]),
-      transition('* => void', [
+      transition(':leave', [
         animate('0.3s ease-out', style({ transform: 'scale(0)' }))
       ]),
     ])
