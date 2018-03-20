@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { map } from 'rxjs/operators/map';
+import { map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
@@ -14,20 +14,31 @@ import { TodoModel } from './../todo.model';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent implements OnInit, AfterViewInit {
+
+  public disableAnimation = true;
 
   private todos: TodoModel[] = [];
 
+  private _lastStatus: string;
+
   constructor(
     private _todoService: TodoService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     combineLatest(
       this._route.params.pipe(map(params => params.status)),
       this._todoService.todos
-    ).subscribe(([status, todos]) => {
+    )
+    .subscribe(([status, todos]) => {
+      if (this._lastStatus !== status) {
+        this.disableAnimation = true;
+      }
+      this._lastStatus = status;
+
       if (status === 'completed') {
         this.todos = todos.filter((todo: TodoModel) => {
           return todo.completed === true;
@@ -40,6 +51,12 @@ export class TodoListComponent implements OnInit {
         this.todos = todos;
       }
     });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.disableAnimation = false;
+    }, 0);
   }
 
   public hasCompleted(): boolean {

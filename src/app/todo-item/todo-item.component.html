@@ -1,7 +1,4 @@
-<li
-  [class.completed]="todo.completed"
-  [class.editing]="editing"
->
+<li [class.completed]="todo.completed" [class.editing]="editing">
   <div class="view">
     <input class="toggle" type="checkbox" (click)="toggleCompletion()" [checked]="todo.completed">
     <label (dblclick)="edit(todo)">{{ todo.title | trim }}</label>

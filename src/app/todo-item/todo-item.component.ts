@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding, OnInit, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { trigger, transition, style, animate, AnimationEvent } from '@angular/animations';
 
 import { TodoModel } from '../todo.model';
@@ -10,17 +10,17 @@ import { TodoModel } from '../todo.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('todoAnimation', [
-      transition('void => fadeIn', [
+      transition('void => *', [
         style({ height: 0 }),
-        animate('0.2s ease-in', style({ height: '*' }))
+        animate('0.3s ease-in', style({ height: '*' }))
       ]),
-      transition('* => fadeOut', [
-        animate('0.2s 0.1s ease-out', style({ opacity: 0, transform: 'translateX(100%)' }))
+      transition('* => void', [
+        animate('0.3s ease-out', style({ transform: 'scale(0)' }))
       ]),
     ])
   ]
 })
-export class TodoItemComponent implements OnInit {
+export class TodoItemComponent {
 
   @Input() todo: TodoModel;
 
@@ -30,17 +30,7 @@ export class TodoItemComponent implements OnInit {
 
   public editing = false;
 
-  @HostBinding('@todoAnimation') state;
-
-  @HostListener('@todoAnimation.done', ['$event']) onAnimationDone($event: AnimationEvent) {
-    if ($event.toState === 'fadeOut') {
-      this.itemRemoved.next(this.todo.id);
-    }
-  }
-
-  ngOnInit() {
-    this.state = 'fadeIn';
-  }
+  @HostBinding('@todoAnimation') true;
 
   public edit() {
     this.editing = true;
@@ -68,7 +58,7 @@ export class TodoItemComponent implements OnInit {
   }
 
   public remove() {
-    this.state = 'fadeOut';
+    this.itemRemoved.next(this.todo.id);
   }
 
   public update() {
