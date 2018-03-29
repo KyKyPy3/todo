@@ -47,3 +47,7 @@ label[for='toggle-all'] {
   -webkit-appearance: none;
   appearance: none;
 }
+
+.loader {
+  padding: 10px;
+}

@@ -31,9 +31,13 @@ import { enterAnimation, leaveAnimation} from './todo.animations';
     ])
   ]
 })
-export class TodoListComponent implements OnInit, AfterViewInit {
+export class TodoListComponent implements OnInit {
 
-  public disableAnimation = true;
+  public loaded = false;
+
+  public percentageValue = 0;
+
+  public disableAnimation = false;
 
   private todos: TodoModel[] = [];
 
@@ -52,28 +56,41 @@ export class TodoListComponent implements OnInit, AfterViewInit {
     )
     .subscribe(([status, todos]) => {
       if (this._lastStatus !== status) {
-        this.disableAnimation = true;
+        this.loaded = false;
+        this.percentageValue = 0;
       }
-      this._lastStatus = status;
 
-      if (status === 'completed') {
-        this.todos = todos.filter((todo: TodoModel) => {
-          return todo.completed === true;
-        });
-      } else if (status === 'active') {
-        this.todos = todos.filter((todo: TodoModel) => {
-          return todo.completed === false;
-        });
-      } else {
-        this.todos = todos;
-      }
+      const interval = setInterval(() => {
+        if (this.percentageValue >= 100) {
+          this.loaded = true;
+          clearInterval(interval);
+
+          if (this._lastStatus !== status || !status) {
+            this.disableAnimation = true;
+          }
+
+          if (status === 'completed') {
+            this.todos = todos.filter((todo: TodoModel) => {
+              return todo.completed === true;
+            });
+          } else if (status === 'active') {
+            this.todos = todos.filter((todo: TodoModel) => {
+              return todo.completed === false;
+            });
+          } else {
+            this.todos = todos;
+          }
+
+          if (this._lastStatus !== status || !status) {
+            setTimeout(() => {
+              this.disableAnimation = false;
+            }, 0);
+          }
+        } else {
+          this.percentageValue = this.percentageValue + 20;
+        }
+      }, 777);
     });
-  }
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.disableAnimation = false;
-    }, 0);
   }
 
   public hasCompleted(): boolean {

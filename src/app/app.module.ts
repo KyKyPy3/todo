@@ -9,6 +9,7 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoFooterComponent } from './todo-footer/todo-footer.component';
 import { TodoHeaderComponent } from './todo-header/todo-header.component';
+import { LoaderComponent } from './loader/loader.component';
 import { TrimPipe } from './trim.pipe';
 import { TodoService } from './todo.service';
 import { routes } from './routes';
@@ -21,7 +22,8 @@ import { routes } from './routes';
     TodoItemComponent,
     TodoFooterComponent,
     TodoHeaderComponent,
-    TrimPipe
+    TrimPipe,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

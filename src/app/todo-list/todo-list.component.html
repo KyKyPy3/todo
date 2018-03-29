@@ -9,15 +9,20 @@
     [checked]="hasCompleted()"
     (click)="setAllTo(toggleall)"
   >
-  <ul class="todo-list">
-    <div *ngFor="let todo of todos; trackBy: trackById" @todoList>
-      <app-todo-item
-        @todoItem
-        [todo]="todo"
-        (itemRemoved)="remove($event)"
-        (itemModified)="update($event)"
-      ></app-todo-item>
-    </div>
-  </ul>
+  <div *ngIf="loaded">
+    <ul class="todo-list">
+      <div *ngFor="let todo of todos; trackBy: trackById" @todoList [@.disabled]="disableAnimation">
+        <app-todo-item
+          @todoItem
+          [todo]="todo"
+          (itemRemoved)="remove($event)"
+          (itemModified)="update($event)"
+        ></app-todo-item>
+      </div>
+    </ul>
+  </div>
+  <div class="loader" *ngIf="!loaded">
+    <app-loader [percentage]="percentageValue"></app-loader>
+  </div>
 </section>
 <app-todo-footer></app-todo-footer>
