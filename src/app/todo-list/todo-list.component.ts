@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { query, useAnimation, transition, style, trigger, animate, animateChild } from '@angular/animations';
 
 import { map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -7,12 +8,28 @@ import { Observable } from 'rxjs/Observable';
 
 import { TodoService } from './../todo.service';
 import { TodoModel } from './../todo.model';
+import { enterAnimation, leaveAnimation} from './todo.animations';
 
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
-  styleUrls: ['./todo-list.component.css']
+  styleUrls: ['./todo-list.component.css'],
+  animations: [
+    trigger('todoList', [
+      transition(':enter, :leave', [
+        query('@*', animateChild())
+      ])
+    ]),
+    trigger('todoItem', [
+      transition(':enter', [
+        useAnimation(enterAnimation)
+      ]),
+      transition(':leave', [
+        useAnimation(leaveAnimation)
+      ])
+    ])
+  ]
 })
 export class TodoListComponent implements OnInit, AfterViewInit {
 
