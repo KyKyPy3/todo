@@ -26,7 +26,7 @@ export class TodoFooterComponent implements OnInit {
 
   ngOnInit() {
     combineLatest(
-      this._route.params.pipe(map(params => params.status)),
+      this._route.data.pipe(map(params => params.status)),
       this._todoService.todos
     ).subscribe(([status, todos]) => {
       this.currentStatus = status || '';

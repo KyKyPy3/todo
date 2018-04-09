@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .footer {
 	color: #777;
 	padding: 10px 15px;
