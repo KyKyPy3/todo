@@ -58,6 +58,28 @@ export class TodoListComponent implements OnInit {
       if (this._lastStatus !== status) {
         this.loaded = false;
         this.percentageValue = 0;
+      } else {
+        if (this._lastStatus !== status) {
+          this.disableAnimation = true;
+        }
+
+        if (status === 'completed') {
+          this.todos = todos.filter((todo: TodoModel) => {
+            return todo.completed === true;
+          });
+        } else if (status === 'active') {
+          this.todos = todos.filter((todo: TodoModel) => {
+            return todo.completed === false;
+          });
+        } else {
+          this.todos = todos;
+        }
+
+        if (this._lastStatus !== status) {
+          setTimeout(() => {
+            this.disableAnimation = false;
+          }, 0);
+        }
       }
 
       const interval = setInterval(() => {
@@ -86,6 +108,8 @@ export class TodoListComponent implements OnInit {
               this.disableAnimation = false;
             }, 0);
           }
+
+          this._lastStatus = status;
         } else {
           this.percentageValue = this.percentageValue + 20;
         }
